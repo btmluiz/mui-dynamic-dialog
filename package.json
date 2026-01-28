@@ -1,0 +1,74 @@
+{
+  "name": "@nardole/mui-dynamic-dialog",
+  "version": "0.0.6",
+  "keywords": [
+    "react",
+    "mui",
+    "dialog",
+    "material-ui"
+  ],
+  "author": {
+    "name": "Luiz Braga"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "prepublishOnly": "yarn build"
+  },
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "module": "dist/main.js",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/main.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@eslint/js": "^9.39.1",
+    "@mui/material": "^7.2.0",
+    "@types/lodash.merge": "^4",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "glob": "^13.0.0",
+    "globals": "^16.5.0",
+    "lodash.merge": "^4.6.2",
+    "prettier": "^3.8.1",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4",
+    "vite-plugin-dts": "^4.5.4",
+    "vite-tsconfig-paths": "^6.0.5"
+  },
+  "peerDependencies": {
+    "@mui/material": "^7.2.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "packageManager": "yarn@4.11.0"
+}
