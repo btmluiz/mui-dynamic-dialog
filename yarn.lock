@@ -939,7 +939,6 @@ __metadata:
     "@emotion/styled": "npm:^11.14.1"
     "@eslint/js": "npm:^9.39.1"
     "@mui/material": "npm:^7.2.0"
-    "@types/lodash.merge": "npm:^4"
     "@types/node": "npm:^24.10.1"
     "@types/react": "npm:^19.2.5"
     "@types/react-dom": "npm:^19.2.3"
@@ -949,7 +948,6 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.24"
     glob: "npm:^13.0.0"
     globals: "npm:^16.5.0"
-    lodash.merge: "npm:^4.6.2"
     prettier: "npm:^3.8.1"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
@@ -1322,22 +1320,6 @@ __metadata:
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 10c0/a996a745e6c5d60292f36731dd41341339d4eeed8180bb09226e5c8d23759067692b1d88e5d91d72ee83dfc00d3aca8e7bd43ea120516c17922cbcb7c3e252db
-  languageName: node
-  linkType: hard
-
-"@types/lodash.merge@npm:^4":
-  version: 4.6.9
-  resolution: "@types/lodash.merge@npm:4.6.9"
-  dependencies:
-    "@types/lodash": "npm:*"
-  checksum: 10c0/2e2ccacdceb2e23343a514e8c24540fc4e1f1ffd616b645eb72ec685da9389d99a2544f04d61921e46a6768f8cc0fe5f58d4f7edaba9bc50552f0ca7df905e83
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:*":
-  version: 4.17.23
-  resolution: "@types/lodash@npm:4.17.23"
-  checksum: 10c0/9d9cbfb684e064a2b78aab9e220d398c9c2a7d36bc51a07b184ff382fa043a99b3d00c16c7f109b4eb8614118f4869678dbae7d5c6700ed16fb9340e26cc0bf6
   languageName: node
   linkType: hard
 

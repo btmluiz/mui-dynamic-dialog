@@ -1,7 +1,7 @@
 import type { DynamicDialogOptions } from "@nardole/mui-dynamic-dialog/provider/DynamicDialogProvider.tsx";
 import * as React from "react";
 import { DynamicDialogContext } from "@nardole/mui-dynamic-dialog/context/DynamicDialogContext.tsx";
-import merge from "lodash.merge";
+import { deepMerge } from "@nardole/mui-dynamic-dialog/utils/deepMerge.ts";
 import { DynamicDialogChildProvider } from "@nardole/mui-dynamic-dialog/provider/DynamicDialogChildProvider.tsx";
 import {
   Button as MuiButton,
@@ -67,7 +67,8 @@ export function DynamicDialog({ id, open, options }: DynamicDialogProps) {
     },
     ...rest
   } = React.useMemo(
-    (): DefaultOptions => merge({}, DEFAULT_OPTIONS, options, defaultOptions),
+    () =>
+      deepMerge<DefaultOptions>({}, DEFAULT_OPTIONS, options, defaultOptions),
     [options, defaultOptions],
   );
 
