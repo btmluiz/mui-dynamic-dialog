@@ -120,8 +120,6 @@ export function DynamicDialog({ id, open, options }: DynamicDialogProps) {
     ],
   );
 
-  console.log(id);
-
   return (
     <DynamicDialogChildProvider id={id}>
       <DialogSlot {...rest.slotsProps.dialog} open={open} onClose={onClose}>

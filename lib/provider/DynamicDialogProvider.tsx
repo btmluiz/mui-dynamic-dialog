@@ -9,6 +9,7 @@ import type {
 import { useState } from "react";
 import { DynamicDialogContext } from "@nardole/mui-dynamic-dialog/context/DynamicDialogContext";
 import { DynamicDialog } from "@nardole/mui-dynamic-dialog/dialog/DynamicDialog.tsx";
+import { v7 } from "uuid";
 
 export type ButtonType = "confirm" | "cancel";
 
@@ -74,7 +75,7 @@ export function DynamicDialogProvider({
   >([]);
 
   const openDialog = (options: DynamicDialogOptions) => {
-    const id = crypto.randomUUID();
+    const id = v7();
     setDialogs((dialogs) => [...dialogs, { id, options, open: true }]);
     return {
       id,

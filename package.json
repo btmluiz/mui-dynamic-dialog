@@ -1,6 +1,6 @@
 {
   "name": "@nardole/mui-dynamic-dialog",
-  "version": "0.0.7",
+  "version": "0.0.13",
   "keywords": [
     "react",
     "mui",
@@ -40,7 +40,8 @@
   },
   "dependencies": {
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@emotion/react": "^11.14.0",
