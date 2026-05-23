@@ -133,7 +133,7 @@ export function DynamicDialog({ id, open, options }: DynamicDialogProps) {
             {rest.content}
           </DialogContentSlot>
         )}
-        {!rest.disableCancel && !rest.disableConfirm && (
+        {!rest.disableCancel || !rest.disableConfirm && (
           <DialogActionsSlot {...rest.slotsProps.dialogActions}>
             {rest.buttonOrder.map((button) => buttons[button] ?? null)}
           </DialogActionsSlot>
