@@ -53,7 +53,11 @@ const DEFAULT_OPTIONS: DefaultOptions = {
   buttonOrder: ["cancel", "confirm"],
 };
 
-export function DynamicDialog({ id, open, options }: DynamicDialogProps) {
+export function DynamicDialog({
+  id,
+  open,
+  options,
+}: Readonly<DynamicDialogProps>) {
   const { defaultOptions, close } = React.useContext(DynamicDialogContext);
 
   const {
@@ -78,22 +82,22 @@ export function DynamicDialog({ id, open, options }: DynamicDialogProps) {
     if (rest.shouldClose("cancel", id)) {
       rest.onCancel(id);
     }
-  }, []);
+  }, [close, id, rest]);
 
   const onConfirm = React.useCallback(() => {
-    rest.onConfirm && rest.onConfirm(id);
+    rest.onConfirm?.(id);
 
     if (rest.shouldClose("confirm", id)) {
       close(id, "confirm");
     }
-  }, []);
+  }, [close, id, rest]);
 
   const onClose = React.useCallback(() => {
     if (!rest.disableClose && rest.shouldClose("close", id)) {
       close(id, "close");
       rest.onClosed(id);
     }
-  }, []);
+  }, [close, id, rest]);
 
   const buttons = React.useMemo(
     () => ({
@@ -110,13 +114,15 @@ export function DynamicDialog({ id, open, options }: DynamicDialogProps) {
     }),
     [
       rest.disableCancel,
-      rest.disableConfirm,
-      CancelSlot,
-      ConfirmSlot,
       rest.slotsProps.cancel,
       rest.slotsProps.confirm,
       rest.cancelText,
+      rest.disableConfirm,
       rest.confirmText,
+      CancelSlot,
+      onCancel,
+      ConfirmSlot,
+      onConfirm,
     ],
   );
 
@@ -133,7 +139,7 @@ export function DynamicDialog({ id, open, options }: DynamicDialogProps) {
             {rest.content}
           </DialogContentSlot>
         )}
-        {!rest.disableCancel || !rest.disableConfirm && (
+        {(!rest.disableCancel || !rest.disableConfirm) && (
           <DialogActionsSlot {...rest.slotsProps.dialogActions}>
             {rest.buttonOrder.map((button) => buttons[button] ?? null)}
           </DialogActionsSlot>
