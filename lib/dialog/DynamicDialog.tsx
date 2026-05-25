@@ -102,12 +102,16 @@ export function DynamicDialog({
   const buttons = React.useMemo(
     () => ({
       cancel: !rest.disableCancel && CancelSlot && (
-        <CancelSlot {...rest.slotsProps.cancel} onClick={onCancel}>
+        <CancelSlot key="cancel" {...rest.slotsProps.cancel} onClick={onCancel}>
           {rest.cancelText}
         </CancelSlot>
       ),
       confirm: !rest.disableConfirm && (
-        <ConfirmSlot {...rest.slotsProps.confirm} onClick={onConfirm}>
+        <ConfirmSlot
+          key="confirm"
+          {...rest.slotsProps.confirm}
+          onClick={onConfirm}
+        >
           {rest.confirmText}
         </ConfirmSlot>
       ),
