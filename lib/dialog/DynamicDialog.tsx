@@ -59,6 +59,8 @@ export function DynamicDialog({
   options,
 }: Readonly<DynamicDialogProps>) {
   const { defaultOptions, close } = React.useContext(DynamicDialogContext);
+  const [canceling, setCanceling] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const {
     slots: {
@@ -76,33 +78,57 @@ export function DynamicDialog({
     [options, defaultOptions],
   );
 
-  const onCancel = React.useCallback(() => {
-    close(id, "cancel");
-
+  const onCancel = React.useCallback(async () => {
     if (rest.shouldClose("cancel", id)) {
-      rest.onCancel(id);
+      setCanceling(true);
+      const result = rest.onCancel(id);
+
+      if (result instanceof Promise) {
+        await result;
+      }
+
+      setCanceling(false);
+      close(id, "cancel");
     }
   }, [close, id, rest]);
 
-  const onConfirm = React.useCallback(() => {
-    rest.onConfirm?.(id);
+  const onConfirm = React.useCallback(async () => {
+    setLoading(true);
+    const result = rest.onConfirm(id);
 
+    if (result instanceof Promise) {
+      await result;
+    }
+
+    setLoading(false);
     if (rest.shouldClose("confirm", id)) {
       close(id, "confirm");
     }
   }, [close, id, rest]);
 
-  const onClose = React.useCallback(() => {
+  const onClose = React.useCallback(async () => {
     if (!rest.disableClose && rest.shouldClose("close", id)) {
+      setCanceling(true);
+      const result = rest.onClosed(id);
+
+      if (result instanceof Promise) {
+        await result;
+      }
+
+      setCanceling(false);
       close(id, "close");
-      rest.onClosed(id);
     }
   }, [close, id, rest]);
 
   const buttons = React.useMemo(
     () => ({
       cancel: !rest.disableCancel && CancelSlot && (
-        <CancelSlot key="cancel" {...rest.slotsProps.cancel} onClick={onCancel}>
+        <CancelSlot
+          key="cancel"
+          {...rest.slotsProps.cancel}
+          onClick={onCancel}
+          disabled={loading}
+        >
           {rest.cancelText}
         </CancelSlot>
       ),
@@ -111,6 +137,8 @@ export function DynamicDialog({
           key="confirm"
           {...rest.slotsProps.confirm}
           onClick={onConfirm}
+          disabled={canceling}
+          loading={loading}
         >
           {rest.confirmText}
         </ConfirmSlot>
@@ -127,6 +155,8 @@ export function DynamicDialog({
       onCancel,
       ConfirmSlot,
       onConfirm,
+      loading,
+      canceling,
     ],
   );
 

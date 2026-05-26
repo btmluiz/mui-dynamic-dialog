@@ -6,7 +6,7 @@ import type {
   DialogProps,
   DialogTitleProps,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { DynamicDialogContext } from "@nardole/mui-dynamic-dialog/context/DynamicDialogContext";
 import { DynamicDialog } from "@nardole/mui-dynamic-dialog/dialog/DynamicDialog.tsx";
 import { v7 } from "uuid";
@@ -52,9 +52,9 @@ export interface DynamicDialogOptions<
   disableClose?: boolean;
   disableCancel?: boolean;
   disableConfirm?: boolean;
-  onConfirm?: (id: string) => void;
-  onCancel?: (id: string) => void;
-  onClosed?: (id: string) => void;
+  onConfirm?: (id: string) => void | Promise<void>;
+  onCancel?: (id: string) => void | Promise<void>;
+  onClosed?: (id: string) => void | Promise<void>;
   shouldClose?: (reason: CloseReason, id: string) => boolean;
   buttonOrder?: ButtonType[];
 }
@@ -62,58 +62,82 @@ export interface DynamicDialogProviderProps extends React.PropsWithChildren {
   defaultOptions?: DynamicDialogOptions;
 }
 
+export type DialogResolver = (value: void | PromiseLike<void>) => void;
+
 export function DynamicDialogProvider({
   children,
   defaultOptions,
-}: DynamicDialogProviderProps) {
+}: Readonly<DynamicDialogProviderProps>) {
   const [dialogs, setDialogs] = useState<
     {
       id: string;
       options: DynamicDialogOptions;
       open: boolean;
+      resolve?: DialogResolver;
     }[]
   >([]);
 
-  const openDialog = (options: DynamicDialogOptions) => {
-    const id = v7();
-    setDialogs((dialogs) => [...dialogs, { id, options, open: true }]);
-    return {
-      id,
-      close: () =>
-        setDialogs((dialogs) => dialogs.filter((dialog) => dialog.id !== id)),
-    };
-  };
+  const removeDialog = useCallback(
+    (id: string) => {
+      setDialogs((prevState) => prevState.filter((dialog) => dialog.id !== id));
+    },
+    [setDialogs],
+  );
 
-  const closeDialog = (id: string) => {
-    setDialogs((prevState) => {
-      const index = prevState.findIndex((dialog) => dialog.id === id);
-      if (index >= 0) {
-        const newState = [...prevState];
-        if (newState[index]) {
-          newState[index].open = false;
+  const closeDialog = useCallback(
+    (id: string) => {
+      setDialogs((prevState) => {
+        const index = prevState.findIndex((dialog) => dialog.id === id);
+        if (index >= 0) {
+          const newState = [...prevState];
+          if (newState[index]) {
+            newState[index].open = false;
+          }
+          return newState;
         }
-        return newState;
-      }
 
-      return prevState;
-    });
+        return prevState;
+      });
 
-    removeDialog(id);
-  };
+      removeDialog(id);
+    },
+    [removeDialog],
+  );
 
-  const removeDialog = (id: string) => {
-    setDialogs((prevState) => prevState.filter((dialog) => dialog.id !== id));
-  };
+  const openDialog = useCallback(
+    (options: DynamicDialogOptions) => {
+      const id = v7();
+      let dialogResolve: DialogResolver = () => {};
+      const dialogPromise = new Promise<void>((resolve) => {
+        dialogResolve = resolve;
+      });
+
+      setDialogs((dialogs) => [
+        ...dialogs,
+        { id, options, open: true, resolve: dialogResolve },
+      ]);
+
+      return {
+        id,
+        close: () => closeDialog(id),
+        unwrap: () => dialogPromise,
+      };
+    },
+    [closeDialog, setDialogs],
+  );
+
+  const providerProps = useMemo(
+    () => ({
+      dialog: openDialog,
+      close: closeDialog,
+      remove: removeDialog,
+      defaultOptions,
+    }),
+    [openDialog, closeDialog, removeDialog, defaultOptions],
+  );
 
   return (
-    <DynamicDialogContext.Provider
-      value={{
-        dialog: openDialog,
-        close: closeDialog,
-        remove: removeDialog,
-        defaultOptions,
-      }}
-    >
+    <DynamicDialogContext.Provider value={providerProps}>
       {children}
       {dialogs.map((dialog) => (
         <DynamicDialog
