@@ -7,7 +7,7 @@ import type {
 export type DynamicDialogFn = (options: Omit<DynamicDialogOptions, "open">) => {
   id: string;
   close: () => void;
-  unwrap: () => Promise<void>;
+  unwrap: () => Promise<CloseReason>;
 };
 export type DynamicDialogCloseFn = (id: string, reason?: CloseReason) => void;
 export type DynamicDialogRemoveFn = (id: string) => void;
